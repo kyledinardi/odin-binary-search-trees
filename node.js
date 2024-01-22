@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 class Node {
   constructor(d) {
     this.data = d;
