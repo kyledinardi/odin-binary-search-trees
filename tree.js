@@ -12,30 +12,30 @@ function buildTree(arr, start, end) {
   return node;
 }
 
-function insert(node, data) {
+function insert(node, value) {
   if (node === null) {
-    return new Node(data);
+    return new Node(value);
   }
 
-  if (data < node.data) {
-    node.left = insert(node.left, data);
+  if (value < node.data) {
+    node.left = insert(node.left, value);
   } else {
-    node.right = insert(node.right, data);
+    node.right = insert(node.right, value);
   }
 
   return node;
 }
 
-function deleteNode(root, data) {
+function deleteNode(root, value) {
   if (root === null) {
     return root;
   }
 
-  if (data < root.data) {
-    root.left = deleteNode(root.left, data);
+  if (value < root.data) {
+    root.left = deleteNode(root.left, value);
     return root;
-  } else if (data > root.data) {
-    root.right = deleteNode(root.right, data);
+  } else if (value > root.data) {
+    root.right = deleteNode(root.right, value);
     return root;
   }
 
@@ -62,6 +62,118 @@ function deleteNode(root, data) {
 
     root.data = succ.data;
     return root;
+  }
+}
+
+function find(node, value) {
+  if (node === null) {
+    return 'Value not in tree';
+  }
+
+  if (value < node.data) {
+    return find(node.left, value);
+  } else if (value > node.data) {
+    return find(node.right, value);
+  } else {
+    return node;
+  }
+}
+
+function levelOrder(node, callback) {
+  if (node === null) {
+    null;
+  }
+
+  const arr = [];
+  const q = [];
+  q.push(node);
+
+  while (q.length > 0) {
+    const current = q.shift();
+
+    if (callback) {
+      current.data = callback(current.data);
+    } else {
+      arr.push(current.data);
+    }
+
+    if (current.left) {
+      q.push(current.left);
+    }
+    if (current.right) {
+      q.push(current.right);
+    }
+  }
+
+  if (!callback) {
+    return arr;
+  }
+}
+
+function inOrder(node, callback, arr) {
+  if (!arr) {
+    arr = [];
+  }
+  if (node === null) {
+    return;
+  }
+
+  inOrder(node.left, callback, arr);
+
+  if (callback) {
+    node.data = callback(node.data);
+  } else {
+    arr.push(node.data);
+  }
+
+  inOrder(node.right, callback, arr);
+
+  if (!callback) {
+    return arr;
+  }
+}
+
+function preOrder(node, callback, arr) {
+  if (node === null) {
+    return;
+  }
+  if (!arr) {
+    arr = [];
+  }
+
+  if (callback) {
+    node.data = callback(node.data);
+  } else {
+    arr.push(node.data);
+  }
+
+  preOrder(node.left, callback, arr);
+  preOrder(node.right, callback, arr);
+
+  if (!callback) {
+    return arr;
+  }
+}
+
+function postOrder(node, callback, arr) {
+  if (!arr) {
+    arr = [];
+  }
+  if (node === null) {
+    return;
+  }
+
+  postOrder(node.left, callback, arr);
+  postOrder(node.right, callback, arr);
+
+  if (callback) {
+    node.data = callback(node.data);
+  } else {
+    arr.push(node.data);
+  }
+
+  if (!callback) {
+    return arr;
   }
 }
 
