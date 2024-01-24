@@ -110,10 +110,7 @@ function levelOrder(node, callback) {
   }
 }
 
-function inOrder(node, callback, arr) {
-  if (!arr) {
-    arr = [];
-  }
+function inOrder(node, callback, arr = []) {
   if (node === null) {
     return;
   }
@@ -121,7 +118,7 @@ function inOrder(node, callback, arr) {
   inOrder(node.left, callback, arr);
 
   if (callback) {
-    node.data = callback(node.data);
+    callback(node);
   } else {
     arr.push(node.data);
   }
@@ -133,16 +130,13 @@ function inOrder(node, callback, arr) {
   }
 }
 
-function preOrder(node, callback, arr) {
+function preOrder(node, callback, arr = []) {
   if (node === null) {
     return;
   }
-  if (!arr) {
-    arr = [];
-  }
 
   if (callback) {
-    node.data = callback(node.data);
+    callback(node);
   } else {
     arr.push(node.data);
   }
@@ -155,10 +149,7 @@ function preOrder(node, callback, arr) {
   }
 }
 
-function postOrder(node, callback, arr) {
-  if (!arr) {
-    arr = [];
-  }
+function postOrder(node, callback, arr = []) {
   if (node === null) {
     return;
   }
@@ -167,7 +158,7 @@ function postOrder(node, callback, arr) {
   postOrder(node.right, callback, arr);
 
   if (callback) {
-    node.data = callback(node.data);
+    callback(node);
   } else {
     arr.push(node.data);
   }
@@ -175,6 +166,58 @@ function postOrder(node, callback, arr) {
   if (!callback) {
     return arr;
   }
+}
+
+function height(node) {
+  if (node === null) {
+    return -1;
+  }
+
+  const leftHeight = height(node.left);
+  const rightHeight = height(node.right);
+
+  return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+}
+
+function depth(node, root) {
+  let current = 0;
+  let tmp = root;
+
+  while (tmp !== null) {
+    if (node.data < tmp.data) {
+      tmp = tmp.left;
+      current += 1;
+    } else if (node.data > tmp.data) {
+      tmp = tmp.right;
+      current += 1;
+    } else {
+      return current;
+    }
+  }
+
+  return 'Node not in tree';
+}
+
+function isBalanced(node) {
+  if (node === null) {
+    return;
+  }
+
+  let isTreeBalanced = true;
+
+  inOrder(node, (tmp) => {
+    if (!tmp.left && !tmp.right) {
+      return;
+    }
+
+    const diff = Math.abs(height(tmp.left) - height(tmp.right))
+
+    if (diff > 1) {
+      isTreeBalanced = false;
+    }
+  });
+
+  return isTreeBalanced;
 }
 
 function sortAndRemoveDuplicates(arr) {
