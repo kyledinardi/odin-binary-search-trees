@@ -198,28 +198,6 @@ function depth(node, root) {
   return 'Node not in tree';
 }
 
-function isBalanced(node) {
-  if (node === null) {
-    return;
-  }
-
-  let isTreeBalanced = true;
-
-  inOrder(node, (tmp) => {
-    if (!tmp.left && !tmp.right) {
-      return;
-    }
-
-    const diff = Math.abs(height(tmp.left) - height(tmp.right))
-
-    if (diff > 1) {
-      isTreeBalanced = false;
-    }
-  });
-
-  return isTreeBalanced;
-}
-
 function sortAndRemoveDuplicates(arr) {
   const copy = [...arr];
   const sortedCopy = copy.sort((a, b) => a - b);
@@ -253,7 +231,46 @@ class Tree {
     this.arr = sortAndRemoveDuplicates(arr);
     this.root = buildTree(this.arr, 0, this.arr.length - 1);
   }
+
+  isBalanced() {
+    if (this.root === null) {
+      return;
+    }
+
+    let isTreeBalanced = true;
+
+    inOrder(this.root, (tmp) => {
+      if (!tmp.left && !tmp.right) {
+        return;
+      }
+
+      const diff = Math.abs(height(tmp.left) - height(tmp.right));
+
+      if (diff > 1) {
+        isTreeBalanced = false;
+      }
+    });
+
+    return isTreeBalanced;
+  }
+
+  rebalance() {
+    const newArr = inOrder(this.root);
+    this.root = buildTree(newArr, 0, newArr.length - 1);
+  }
 }
 
 const example = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
-console.log(prettyPrint(example.root));
+console.log(example.isBalanced());
+console.log(preOrder(example.root));
+console.log(postOrder(example.root));
+console.log(inOrder(example.root));
+insert(example.root, 2);
+insert(example.root, 10);
+insert(example.root, 11);
+console.log(example.isBalanced());
+example.rebalance();
+console.log(example.isBalanced());
+console.log(preOrder(example.root));
+console.log(postOrder(example.root));
+console.log(inOrder(example.root));
